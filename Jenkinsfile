@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        PATH = "/opt/homebrew/bin:${env.PATH}"
+        PATH = "/Users/srikar/.docker/bin/docker:${env.PATH}"
     }
 
     stages {
