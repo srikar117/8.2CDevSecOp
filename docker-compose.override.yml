@@ -1,0 +1,3 @@
+services:
+  goof:
+    image: nodejs-goof:${BUILD_NUMBER}

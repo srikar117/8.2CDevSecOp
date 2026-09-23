@@ -49,6 +49,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sh 'docker compose -p goof-staging up -d'
+                sh 'sleep 15'
+                sh 'curl -f http://localhost:3001 || (echo "Staging health check failed" && exit 1)'
+            }
+        }
     }
 
     post {
