@@ -41,6 +41,14 @@ pipeline {
                 sh 'docker build -t nodejs-goof:${BUILD_NUMBER} .'
             }
         }
+
+        stage('Code Quality') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    sh 'sonar-scanner -Dsonar.token=$SONAR_TOKEN'
+                }
+            }
+        }
     }
 
     post {
