@@ -8,6 +8,15 @@ pipeline {
             }
         }
 
+        stage('Debug Environment') {
+            steps {
+                sh 'echo "PATH is: $PATH"'
+                sh 'which npm || echo "npm not found"'
+                sh 'which node || echo "node not found"'
+                sh 'which docker || echo "docker not found"'
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
