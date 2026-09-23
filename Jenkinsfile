@@ -60,7 +60,7 @@ pipeline {
 
         stage('Release') {
             steps {
-                sh 'docker compose -p goof-production -f docker-compose.yml -f docker-compose.production.yml up -d goof goof-mongo'
+                sh 'docker compose -p goof-production -f docker-compose.production.yml up -d goof goof-mongo'
                 sh 'sleep 15'
                 sh 'curl -f http://localhost:3002 || (echo "Production health check failed" && exit 1)'
                 sh 'docker tag nodejs-goof:${BUILD_NUMBER} nodejs-goof:release-${BUILD_NUMBER}'
