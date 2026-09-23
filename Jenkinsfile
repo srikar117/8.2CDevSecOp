@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        PATH = "/opt/homebrew/bin:/Users/srikar/.docker/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -43,7 +47,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh '/Users/srikar/.docker/bin/docker build -t nodejs-goof:${BUILD_NUMBER} .'
+                sh 'docker build -t nodejs-goof:${BUILD_NUMBER} .'
             }
         }
     }
