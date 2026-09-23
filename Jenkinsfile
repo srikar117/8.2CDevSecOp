@@ -66,6 +66,26 @@ pipeline {
                 sh 'docker tag nodejs-goof:${BUILD_NUMBER} nodejs-goof:release-${BUILD_NUMBER}'
             }
         }
+
+        stage('Monitoring & Alerting') {
+            steps {
+                script {
+                    def health = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:3002', returnStdout: true).trim()
+                        if (health == '200') {
+                            echo "Production healthy: HTTP ${health}"
+                        } else {
+                            echo "Production unhealthy: HTTP ${health}"
+                        emailext(
+                            subject: "ALERT: Production health check failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                            body: "Production returned HTTP ${health} instead of 200. Check http://localhost:3002 immediately.\n\nBuild: ${env.BUILD_URL}",
+                            to: 'maddukurisrikar@gmail.com'
+                        )
+                        error("Production health check failed with status ${health}")
+                    }
+                }
+            }
+        }
+
     }
 
     post {
