@@ -35,6 +35,12 @@ pipeline {
                 sh 'npm audit || true'
             }
         }
+
+        stage('Build') {
+            steps {
+                sh 'docker build -t nodejs-goof:${BUILD_NUMBER} .'
+            }
+        }
     }
 
     post {
