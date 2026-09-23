@@ -1,8 +1,10 @@
 services:
   goof:
     image: nodejs-goof:${BUILD_NUMBER}
+    container_name: goof-production
     ports:
       - "3002:3001"
   goof-mongo:
+    container_name: goof-mongo-production
     ports:
       - "27018:27017"
