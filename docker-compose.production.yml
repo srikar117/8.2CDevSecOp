@@ -1,0 +1,8 @@
+services:
+  goof:
+    image: nodejs-goof:${BUILD_NUMBER}
+    ports:
+      - "3002:3001"
+  goof-mongo:
+    ports:
+      - "27018:27017"
