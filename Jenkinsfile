@@ -69,22 +69,26 @@ pipeline {
 
         stage('Monitoring & Alerting') {
             steps {
+                withCredentials([string(credentialsId: 'datadog-api-key', variable: 'DD_API_KEY')]) {
+                    sh 'docker compose -p goof-monitoring -f docker-compose.datadog.yml up -d'
+                }
+            sh 'sleep 10'
                 script {
                     def health = sh(script: 'curl -s -o /dev/null -w "%{http_code}" http://localhost:3002', returnStdout: true).trim()
-                        if (health == '200') {
-                            echo "Production healthy: HTTP ${health}"
-                        } else {
-                            echo "Production unhealthy: HTTP ${health}"
+                    if (health == '200') {
+                        echo "Production healthy: HTTP ${health}, monitored by Datadog Agent"
+                    } else {
+                        echo "Production unhealthy: HTTP ${health}"
                         emailext(
                             subject: "ALERT: Production health check failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                            body: "Production returned HTTP ${health} instead of 200. Check http://localhost:3002 immediately.\n\nBuild: ${env.BUILD_URL}",
+                            body: "Production returned HTTP ${health}. Check Datadog dashboard and http://localhost:3002 immediately.\n\nBuild: ${env.BUILD_URL}",
                             to: 'maddukurisrikar@gmail.com'
                         )
                         error("Production health check failed with status ${health}")
                     }
                 }
             }
-        }
+        }   
 
     }
 
